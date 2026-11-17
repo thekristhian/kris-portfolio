@@ -861,17 +861,18 @@ export default function App() {
             OLÁ, EU SOU O KRIS
           </h1>
 
-          <p className="hero-subtitle-prefix" data-node-id="502:25">
-            Eu sou o seu próximo
-          </p>
-
-          <div
-            className="hero-rotating-box"
-            data-node-id="502:26"
-            aria-live="polite"
-            aria-atomic="true"
-          >
-            <span className="hero-rotating-word">{displayedRotatingWord}</span>
+          <div className="hero-subtitle-container">
+            <p className="hero-subtitle-prefix" data-node-id="502:25">
+              Eu sou o seu próximo
+            </p>
+            <div
+              className="hero-rotating-box"
+              data-node-id="502:26"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <span className="hero-rotating-word">{displayedRotatingWord}</span>
+            </div>
           </div>
         </div>
       </section>
