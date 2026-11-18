@@ -248,13 +248,13 @@ a {
   background-color: #000000;
 }
 
-/* Ambient Project Loop Layer (Hero / Loop dos projetos — sem áudio, darkened with overlay) */
+/* Ambient Project Loop Layer (Hero / Loop dos projetos — sem áudio, balanced contrast) */
 .hero-ambient-loop {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.16;
+  opacity: 0.23;
   pointer-events: none;
   overflow: hidden;
 }
@@ -263,7 +263,7 @@ a {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%);
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.45) 100%);
   pointer-events: none;
 }
 
