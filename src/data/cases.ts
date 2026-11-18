@@ -600,5 +600,5 @@ export const PROJECTS: ProjectCaseData[] = [
 
 export const ROTATING_WORDS = ['designer', 'parceiro', 'colega', 'analista'] as const;
 export const CURRICULO_URL =
-  'https://drive.google.com/file/d/1WFQ0rubxB9a-nbbVy4gOoNHzP-8fs75z/view?usp=sharing';
+  'https://drive.google.com/file/d/1rbYRXlLP5qJEuyVaXqf3jYuzICD3oM7N/view?usp=sharing';
 export const LINKEDIN_URL = 'https://www.linkedin.com/in/kristhianribeiro';
