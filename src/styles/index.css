@@ -397,6 +397,11 @@ a {
   z-index: 3;
 }
 
+/* Mobile & Tablet Scroll-Down Indicator at the Envelope Opening */
+.hero-mobile-scroll-cue {
+  display: none;
+}
+
 /* Hero Typography (Centered at prototype proportions without stretching) */
 .hero-title {
   position: absolute;
@@ -438,7 +443,7 @@ a {
 }
 
 .hero-rotating-box {
-  min-width: 140px;
+  width: 144px;
   height: 34px;
   overflow: hidden;
   display: inline-flex;
@@ -1484,7 +1489,7 @@ a {
   }
 
   .hero-rotating-box {
-    min-width: 140px;
+    width: 144px;
     height: 34px;
   }
 
@@ -1516,7 +1521,7 @@ a {
    ========================================================= */
 @media (max-width: 1023px) {
   .portfolio-navbar-wrapper {
-    top: 28px;
+    top: 24px;
   }
 
   .portfolio-navbar {
@@ -1553,7 +1558,7 @@ a {
   }
 
   .nav-item-link {
-    height: 39.6px;
+    height: 44px;
     font-size: 18px;
   }
 
@@ -1569,23 +1574,38 @@ a {
     width: 85.5px;
   }
 
+  /* Balanced Hero Stage: fits above the fold so the open-envelope flaps and orange section below are visible */
   .hero-stage {
     width: 100%;
     max-width: none;
-    height: 1194px;
+    height: clamp(500px, 74svh, 640px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 96px 32px 76px;
   }
 
   .hero-title {
-    top: 470px;
-    font-size: 62px;
-    line-height: 69px;
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    font-size: clamp(46px, 6.8vw, 62px);
+    line-height: 1.12;
     letter-spacing: -1.24px;
-    width: 90%;
+    width: 100%;
+    max-width: 680px;
     white-space: normal;
+    text-wrap: balance;
+    margin: 0 0 18px 0;
   }
 
   .hero-subtitle-container {
-    top: 610px;
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
     gap: 8px;
   }
 
@@ -1595,7 +1615,7 @@ a {
   }
 
   .hero-rotating-box {
-    min-width: 120px;
+    width: 124px;
     height: 29.14px;
   }
 
@@ -1604,25 +1624,74 @@ a {
     line-height: 29.14px;
   }
 
+  /* Expressive envelope flaps preserving 150:133 (41.56deg) slope */
   .hero-corner-left,
   .hero-corner-right {
-    width: 86.88px;
-    height: 77.03px;
+    width: 116px;
+    height: 102.85px;
   }
 
+  /* Animated downward scroll indicator centered at the base of the hero between the flaps */
+  .hero-mobile-scroll-cue {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    z-index: 4;
+    color: var(--portfolio-ivory);
+    opacity: 0.92;
+    transition: opacity 160ms ease, transform 160ms ease;
+  }
+
+  .hero-mobile-scroll-cue:hover,
+  .hero-mobile-scroll-cue:focus-visible {
+    opacity: 1;
+  }
+
+  .hero-mobile-scroll-cue:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--portfolio-ivory);
+  }
+
+  .hero-mobile-scroll-cue .hero-cursor-radius {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Projects Section: Structured Flexbox Flow on 8px Spatial Grid (No huge empty orange voids) */
   .projects-stage {
     width: 100%;
     max-width: 834px;
-    height: 1194px;
+    height: auto;
+    min-height: 0;
+    padding: 48px 32px 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
   }
 
   .projects-heading {
-    left: 50%;
-    top: 240px;
-    font-size: 52px;
-    line-height: 62px;
-    width: 92%;
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    font-size: clamp(38px, 5.8vw, 52px);
+    line-height: 1.18;
+    width: 100%;
+    max-width: 620px;
     white-space: normal;
+    text-wrap: balance;
+    margin: 0;
   }
 
   /* Hide desktop stack & list on Tablet/Mobile, show Carousel */
@@ -1631,26 +1700,51 @@ a {
   }
 
   .projects-carousel {
-    display: block;
-    position: absolute;
-    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    inset: auto;
+    width: 100%;
+    gap: 24px;
   }
 
   .carousel-card-slot {
-    position: absolute;
-    left: 50%;
-    top: 330px;
-    transform: translateX(-50%);
-    width: 360px;
-    height: 392.73px;
-    border-radius: 19.64px;
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 380px;
+    height: 414.55px;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 14px 36px rgba(43, 20, 6, 0.16);
+    box-shadow: 0 16px 40px rgba(43, 20, 6, 0.2);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* Ensure card CTA meets accessible tap target height when scaled */
+  .card-open-case-btn {
+    top: 392px;
+    height: 60px;
+  }
+
+  /* Unified Ergonomic Control Bar Aligned to Card Edges (48x48dp Google Touch Targets) */
+  .carousel-controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 380px;
+    max-width: 100%;
+    min-height: 48px;
+    gap: 12px;
   }
 
   .carousel-arrow-btn {
-    position: absolute;
-    top: 502.36px;
+    position: relative;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
     width: 48px;
     height: 48px;
     border-radius: 24px;
@@ -1658,20 +1752,19 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(43, 20, 6, 0.14);
     transition: opacity 160ms ease, transform 160ms ease;
   }
 
-  .carousel-arrow-btn.prev {
-    left: 42px;
-  }
-
-  .carousel-arrow-btn.next {
-    right: 42px;
+  .carousel-arrow-btn:active:not(:disabled) {
+    transform: scale(0.94);
   }
 
   .carousel-arrow-btn:disabled {
-    opacity: 0.25;
+    opacity: 0.28;
     cursor: default;
+    box-shadow: none;
   }
 
   .carousel-arrow-btn:focus-visible {
@@ -1685,20 +1778,30 @@ a {
   }
 
   .carousel-pagination {
-    position: absolute;
-    left: 50%;
-    top: 750.73px;
-    transform: translateX(-50%);
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 4px;
+    flex: 1;
   }
 
   .carousel-dot-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2px;
+    min-width: 36px;
+    min-height: 48px;
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .carousel-dot-btn:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--portfolio-brown);
   }
 
   .carousel-dot-btn.is-active img {
@@ -1711,25 +1814,42 @@ a {
     height: 8px;
   }
 
+  /* Accessible Footer Bar (48x48px min touch targets) */
   .project-footer {
-    left: 50%;
-    top: 880px;
-    transform: translateX(-50%);
-    width: 216px;
-    height: 43.2px;
-    gap: 14.4px;
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: auto;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 8px;
   }
 
   .minilogo-btn.minilogo-footer {
-    width: 43.2px;
-    height: 43.2px;
-    border-radius: 21.6px;
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+  }
+
+  .minilogo-btn.minilogo-footer .minilogo-kris {
+    font-size: 14px;
+    margin-bottom: -3px;
+  }
+
+  .minilogo-btn.minilogo-footer .minilogo-design {
+    font-size: 11.2px;
   }
 
   .footer-link {
-    width: 72px;
-    height: 32.4px;
-    font-size: 14.4px;
+    width: auto;
+    min-width: 88px;
+    height: 48px;
+    padding: 0 12px;
+    font-size: 16px;
   }
 
   /* Responsive Case Modal on Tablet */
@@ -1796,169 +1916,177 @@ a {
    ========================================================= */
 @media (max-width: 767px) {
   .portfolio-navbar-wrapper {
-    top: 20px;
+    top: 16px;
   }
 
   .portfolio-navbar {
-    width: 330px;
-    height: 58.5px;
-    border-radius: 29.25px;
-    padding: 3.75px 0 3.75px 5.25px;
+    width: min(348px, calc(100vw - 24px));
+    height: 60px;
+    border-radius: 30px;
+    padding: 6px 12px 6px 6px;
+    justify-content: space-between;
   }
 
   .navbar-minilogo-area {
-    width: 69px;
-    height: 51px;
+    width: 56px;
+    height: 48px;
   }
 
   .minilogo-btn {
-    width: 51px;
-    height: 51px;
-    border-radius: 25.5px;
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
   }
 
   .minilogo-btn .minilogo-kris {
-    font-size: 15px;
+    font-size: 14.5px;
     letter-spacing: -0.3px;
     margin-bottom: -3px;
   }
 
   .minilogo-btn .minilogo-design {
-    font-size: 12px;
+    font-size: 11.5px;
     letter-spacing: -0.24px;
   }
 
   .navbar-items {
-    width: 255.75px;
-    height: 51px;
-    gap: 12px;
+    width: auto;
+    flex: 1;
+    height: 48px;
+    justify-content: space-around;
+    gap: 4px;
   }
 
   .nav-item-link {
-    height: 33px;
+    height: 44px;
     font-size: 15px;
     letter-spacing: -0.3px;
+    padding: 0 10px;
   }
 
-  .nav-item-link.nav-item-projetos {
-    width: 72.75px;
-  }
-
-  .nav-item-link.nav-item-curriculo {
-    width: 69.75px;
-  }
-
+  .nav-item-link.nav-item-projetos,
+  .nav-item-link.nav-item-curriculo,
   .nav-item-link.nav-item-linkedin {
-    width: 71.25px;
+    width: auto;
   }
 
+  /* Compact Hero Stage: keeps envelope flaps & orange transition visible above the fold */
   .hero-stage {
     width: 100%;
     max-width: none;
-    height: 844px;
+    height: clamp(430px, 66svh, 510px);
+    padding: 84px 20px 68px;
+  }
+
+  /* Adaptive Mobile Video Framing: shows full 16:10 horizontal composition instead of a 3.5x center zoom */
+  .hero-ambient-loop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+  }
+
+  .hero-ambient-video {
+    width: 128%;
+    max-width: none;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.5) 12%,
+      #000000 26%,
+      #000000 74%,
+      rgba(0, 0, 0, 0.5) 88%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.5) 12%,
+      #000000 26%,
+      #000000 74%,
+      rgba(0, 0, 0, 0.5) 88%,
+      transparent 100%
+    );
   }
 
   .hero-title {
-    top: 320px;
-    font-size: 40px;
-    line-height: 45px;
+    font-size: clamp(32px, 8.8vw, 40px);
+    line-height: 1.12;
     letter-spacing: -0.8px;
-    width: 350px;
+    max-width: 340px;
+    margin: 0 0 14px 0;
   }
 
   .hero-subtitle-container {
-    top: 420px;
-    flex-direction: column;
-    gap: 8px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
   }
 
   .hero-subtitle-prefix {
-    font-size: 20px;
-    line-height: 24.29px;
+    font-size: clamp(17px, 4.5vw, 20px);
+    line-height: 24px;
     letter-spacing: -0.4px;
-    text-align: center;
+    text-align: right;
   }
 
   .hero-rotating-box {
-    min-width: 0;
-    height: 24.29px;
-    justify-content: center;
+    font-size: clamp(17px, 4.5vw, 20px);
+    width: 5.3em;
+    min-width: 5.3em;
+    height: 24px;
+    justify-content: flex-start;
   }
 
   .hero-rotating-word {
-    font-size: 20px;
-    line-height: 24.29px;
-    text-align: center;
+    font-size: inherit;
+    line-height: 24px;
+    text-align: left;
   }
 
+  /* Expressive envelope corner triangles on mobile (preserving 150:133 ratio / 41.56deg slope) */
   .hero-corner-left,
   .hero-corner-right {
-    width: 40.63px;
-    height: 36.02px;
+    width: clamp(88px, 25vw, 114px);
+    height: clamp(78px, 22.17vw, 101px);
   }
 
+  .hero-mobile-scroll-cue {
+    bottom: 10px;
+  }
+
+  /* Mobile Projects Stage: Tight 8px Grid Distribution, Zero Wasted Orange Void */
   .projects-stage {
-    max-width: 390px;
-    height: 844px;
+    max-width: 480px;
+    height: auto;
+    padding: 28px 20px 44px;
+    gap: 24px;
   }
 
   .projects-heading {
-    top: 140px;
-    font-size: 40px;
-    line-height: 48px;
-    width: 350px;
+    font-size: clamp(28px, 7.8vw, 34px);
+    line-height: 1.18;
+    letter-spacing: -0.68px;
+    max-width: 310px;
+    margin: 0;
+  }
+
+  .projects-carousel {
+    gap: 20px;
   }
 
   .carousel-card-slot {
-    top: 250px;
-    width: 280px;
-    height: 305.455px;
-    border-radius: 15.273px;
-  }
-
-  .carousel-arrow-btn {
-    top: 381.73px;
-    width: 42px;
-    height: 42px;
-  }
-
-  .carousel-arrow-btn.prev {
-    left: 10px;
-  }
-
-  .carousel-arrow-btn.next {
-    right: 10px;
-  }
-
-  .carousel-pagination {
-    top: 583.45px;
+    border-radius: 18px;
   }
 
   .project-footer {
-    top: 700px;
-    width: 196.8px;
-    height: 39.36px;
-    gap: 13.12px;
-  }
-
-  .minilogo-btn.minilogo-footer {
-    width: 39.36px;
-    height: 39.36px;
-    border-radius: 19.68px;
-  }
-
-  .minilogo-btn.minilogo-footer .minilogo-kris {
-    font-size: 11.58px;
-  }
-
-  .minilogo-btn.minilogo-footer .minilogo-design {
-    font-size: 9.26px;
-  }
-
-  .footer-link {
-    width: 65.6px;
-    height: 29.52px;
-    font-size: 13.12px;
+    margin-top: 4px;
+    gap: 12px;
   }
 
   /* Mobile Modal (Node 717:3174) */
@@ -1968,7 +2096,7 @@ a {
 
   .case-modal-panel {
     width: 100%;
-    height: calc(100vh - 16px);
+    height: calc(100dvh - 16px);
   }
 
   .case-modal-header {
@@ -1982,30 +2110,48 @@ a {
   }
 
   .case-modal-body {
-    padding: 24px 20px 32px;
-    gap: 32px;
+    padding: 20px 16px 32px;
+    gap: 28px;
   }
 
   .case-banner {
-    min-height: 160px;
+    min-height: 168px;
     padding: 20px;
+  }
+
+  .case-banner-dpu-logo,
+  .case-banner-sib-logo,
+  .case-banner-nc-logo {
+    right: 16px;
+    bottom: 16px;
+    top: auto;
+    width: 72px;
+    height: 72px;
+    opacity: 0.22;
+  }
+
+  .case-banner-gui-logo,
+  .case-banner-gui-ball,
+  .case-banner-gui-stripe,
+  .case-banner-portfolio-layer {
+    display: none;
   }
 
   .case-banner-std-title,
   .case-banner-gui-title {
-    font-size: 24px;
-    line-height: 29px;
+    font-size: 22px;
+    line-height: 28px;
   }
 
   .case-banner-std-subtitle,
   .case-banner-gui-subtitle {
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 15px;
+    line-height: 22px;
   }
 
   .case-main-title {
-    font-size: 32px;
-    line-height: 39px;
+    font-size: 28px;
+    line-height: 34px;
   }
 
   .case-paragraphs,
@@ -2015,19 +2161,50 @@ a {
   }
 
   .case-section-heading {
-    font-size: 24px;
-    line-height: 29px;
+    font-size: 22px;
+    line-height: 28px;
   }
 
   .case-index-btn {
     width: 100%;
   }
 
+  /* Stack Compact 5-item Evidence Gallery cleanly on Mobile so images are large & inspectable */
+  .compact-evidence-gallery {
+    flex-direction: column;
+    height: auto;
+    aspect-ratio: auto;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .compact-evidence-main {
+    width: 100%;
+    height: 200px;
+  }
+
+  .compact-evidence-secondary {
+    width: 100%;
+    height: auto;
+    gap: 8px;
+  }
+
+  .compact-evidence-row {
+    width: 100%;
+    height: 136px;
+    gap: 8px;
+  }
+
+  .compact-evidence-card {
+    width: calc(50% - 4px);
+    height: 136px;
+  }
+
   .compact-evidence-caption {
-    height: 28px;
-    font-size: 10px;
-    line-height: 13px;
-    padding: 0 6px;
+    height: 32px;
+    font-size: 11px;
+    line-height: 14px;
+    padding: 0 8px;
   }
 
   .grid-evidence-rows {

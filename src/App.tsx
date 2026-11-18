@@ -43,25 +43,28 @@ function usePrefersReducedMotion(): boolean {
   return reduced;
 }
 
-function useViewportMode(): 'desktop-1440' | 'desktop-1280' | 'tablet' | 'mobile' {
-  const getMode = () => {
-    if (typeof window === 'undefined') return 'desktop-1440';
+function useViewportState(): {
+  mode: 'desktop-1440' | 'desktop-1280' | 'tablet' | 'mobile';
+  width: number;
+} {
+  const getState = () => {
+    if (typeof window === 'undefined') return { mode: 'desktop-1440' as const, width: 1440 };
     const w = window.innerWidth;
-    if (w < 768) return 'mobile';
-    if (w < 1024) return 'tablet';
-    if (w < 1440) return 'desktop-1280';
-    return 'desktop-1440';
+    if (w < 768) return { mode: 'mobile' as const, width: w };
+    if (w < 1024) return { mode: 'tablet' as const, width: w };
+    if (w < 1440) return { mode: 'desktop-1280' as const, width: w };
+    return { mode: 'desktop-1440' as const, width: w };
   };
 
-  const [mode, setMode] = useState<'desktop-1440' | 'desktop-1280' | 'tablet' | 'mobile'>(getMode);
+  const [state, setState] = useState(getState);
 
   useEffect(() => {
-    const onResize = () => setMode(getMode());
+    const onResize = () => setState(getState());
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  return mode;
+  return state;
 }
 
 interface CardArtworkProps {
@@ -569,7 +572,7 @@ function CaseModal({ caseData, onClose }: CaseModalProps) {
 
 export default function App() {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const viewportMode = useViewportMode();
+  const { mode: viewportMode, width: viewportWidth } = useViewportState();
 
   // Selected project index (0..4)
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
@@ -723,8 +726,13 @@ export default function App() {
     ? PROJECTS.find((p) => p.id === openProjectId) || null
     : null;
 
-  // Scale factor for tablet (360/440) and mobile (280/440) carousel card
-  const carouselScale = viewportMode === 'mobile' ? 280 / 440 : 360 / 440;
+  // Responsive card dimensions for tablet (380px) and mobile (fluid 280px..336px on 20px margin grid)
+  const carouselCardWidth =
+    viewportMode === 'mobile'
+      ? Math.min(336, Math.max(280, viewportWidth - 40))
+      : 380;
+  const carouselCardHeight = Math.round(carouselCardWidth * (480 / 440) * 100) / 100;
+  const carouselScale = carouselCardWidth / 440;
 
   return (
     <div className="portfolio-page" data-node-id="755:2964">
@@ -855,6 +863,49 @@ export default function App() {
           {/* Left & Right Orange Envelope Corner Triangles (Nodes 502:10 and 502:11) */}
           <div className="hero-corner-left" data-node-id="502:10" aria-hidden="true" />
           <div className="hero-corner-right" data-node-id="502:11" aria-hidden="true" />
+
+          {/* Touch & Mobile/Tablet Scroll-Down Cue at the Envelope Opening */}
+          <button
+            type="button"
+            className="hero-mobile-scroll-cue"
+            onClick={scrollToProjetos}
+            aria-label="Rolar para a seção de projetos"
+          >
+            <span className="hero-cursor-radius" aria-hidden="true">
+              <svg
+                className="hero-cursor-arrow arrow-1"
+                width="18"
+                height="10"
+                viewBox="0 0 18 10"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M2 2L9 8L16 2"
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <svg
+                className="hero-cursor-arrow arrow-2"
+                width="18"
+                height="10"
+                viewBox="0 0 18 10"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M2 2L9 8L16 2"
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+          </button>
 
           {/* Hero Title & Rotating Word Subtitle */}
           <h1 className="hero-title" data-node-id="502:23">
@@ -1001,7 +1052,15 @@ export default function App() {
               touchStartXRef.current = null;
             }}
           >
-            <div className="carousel-card-slot" data-node-id="720:3531">
+            <div
+              className="carousel-card-slot"
+              style={{
+                width: `${carouselCardWidth}px`,
+                height: `${carouselCardHeight}px`,
+              }}
+              onClick={(e) => handleOpenCase(PROJECTS[selectedIndex].id, e.currentTarget)}
+              data-node-id="720:3531"
+            >
               <CardArtwork
                 project={PROJECTS[selectedIndex]}
                 scale={carouselScale}
@@ -1010,55 +1069,60 @@ export default function App() {
               />
             </div>
 
-            <button
-              type="button"
-              className="carousel-arrow-btn prev"
-              disabled={selectedIndex === 0}
-              onClick={() => handleSelectProject(selectedIndex - 1)}
-              aria-label="Projeto anterior"
-              data-node-id="720:3542"
-            >
-              <img src="/assets/carousel-prev.svg" alt="" width={24} height={24} />
-            </button>
-
-            <button
-              type="button"
-              className="carousel-arrow-btn next"
-              disabled={selectedIndex === PROJECTS.length - 1}
-              onClick={() => handleSelectProject(selectedIndex + 1)}
-              aria-label="Próximo projeto"
-              data-node-id="720:3545"
-            >
-              <img src="/assets/carousel-next.svg" alt="" width={24} height={24} />
-            </button>
-
             <div
-              className="carousel-pagination"
-              role="tablist"
-              aria-label="Paginação de projetos"
-              data-node-id="720:3550"
+              className="carousel-controls-bar"
+              style={{ width: `${carouselCardWidth}px` }}
             >
-              {PROJECTS.map((proj, idx) => {
-                const isActive = idx === selectedIndex;
-                return (
-                  <button
-                    key={proj.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    aria-label={`Ir para ${proj.shortTitle}`}
-                    className={`carousel-dot-btn ${isActive ? 'is-active' : ''}`}
-                    onClick={() => handleSelectProject(idx)}
-                  >
-                    <img
-                      src={isActive ? '/assets/dot-active.svg' : '/assets/dot-inactive.svg'}
-                      alt=""
-                      width={isActive ? 12 : 8}
-                      height={isActive ? 12 : 8}
-                    />
-                  </button>
-                );
-              })}
+              <button
+                type="button"
+                className="carousel-arrow-btn prev"
+                disabled={selectedIndex === 0}
+                onClick={() => handleSelectProject(selectedIndex - 1)}
+                aria-label="Projeto anterior"
+                data-node-id="720:3542"
+              >
+                <img src="/assets/carousel-prev.svg" alt="" width={24} height={24} />
+              </button>
+
+              <div
+                className="carousel-pagination"
+                role="tablist"
+                aria-label="Paginação de projetos"
+                data-node-id="720:3550"
+              >
+                {PROJECTS.map((proj, idx) => {
+                  const isActive = idx === selectedIndex;
+                  return (
+                    <button
+                      key={proj.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-label={`Ir para ${proj.shortTitle}`}
+                      className={`carousel-dot-btn ${isActive ? 'is-active' : ''}`}
+                      onClick={() => handleSelectProject(idx)}
+                    >
+                      <img
+                        src={isActive ? '/assets/dot-active.svg' : '/assets/dot-inactive.svg'}
+                        alt=""
+                        width={isActive ? 12 : 8}
+                        height={isActive ? 12 : 8}
+                      />
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                type="button"
+                className="carousel-arrow-btn next"
+                disabled={selectedIndex === PROJECTS.length - 1}
+                onClick={() => handleSelectProject(selectedIndex + 1)}
+                aria-label="Próximo projeto"
+                data-node-id="720:3545"
+              >
+                <img src="/assets/carousel-next.svg" alt="" width={24} height={24} />
+              </button>
             </div>
           </div>
 
